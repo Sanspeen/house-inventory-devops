@@ -1,19 +1,65 @@
-# Get Started.
+# 🚀 Get Started
 
-## First step.
-Clone this repository to your local machine using git or download as ZIP file.
+## 📌 Prerequisites
+Before starting, make sure you have:
+- **Git** installed on your system.
+- **Gradle** installed (or use the Gradle wrapper).
+- **PostgreSQL** or a **Neon database** set up.
+- **Java 17+** installed.
 
-## Second step.
-Verify that you have 8080 port free to handle this project, if not change this as you prefer in application-local.yaml.
+---
 
-## Third step.
-Go to Neon or use Postgress to get the host, the username and password and set it as the following environment
-variables:
+## 🛠 Step 1: Clone the Repository
+Clone this repository using **Git** or download it as a ZIP file.
 
-DB_PASS = password from database.
-DB_HOST = from connection string in Neon (or Postgress directly).
-DB_USER = from Neon.
-SPRING_PROFILES_ACTIVE=local.
+```sh
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+```
 
-## Fourth step.
-Execute boot run task from Gradle.
+## 🔌 Step 2: Check Port Availability  
+
+Before running the project, make sure **port 8080** is available. If it's already in use, you need to either **free the port** or **change it** in the configuration file.  
+
+### 🔍 **Check if Port 8080 is in Use**  
+Run the following command based on your operating system:  
+
+**💻 macOS/Linux:**  
+```sh
+lsof -i :8080
+```
+
+## 🛠 Step 3: Configure Database Connection
+
+To set up your database connection, retrieve the necessary credentials from **Neon** or **PostgreSQL** and set them as environment variables.
+
+### 🔹 **Required Environment Variables**
+Set the following environment variables in your system:
+
+```sh
+export DB_PASS="your-database-password"
+export DB_HOST="your-database-host"
+export DB_USER="your-database-username"
+export SPRING_PROFILES_ACTIVE="local"
+```
+
+## 🚀 Step 4: Run the Application  
+
+Now that your database is configured and your port is set, you can run the application using **Gradle**.  
+
+### 🔹 **Run with Gradle**  
+Execute the following command to start the application:  
+
+```sh
+./gradlew bootRun
+```
+
+## 🎯 Next Steps
+
+After successfully running the application, follow these steps:
+
+1. Open the application in your browser:
+   ```sh
+   http://localhost:8080
+   ```
+   
