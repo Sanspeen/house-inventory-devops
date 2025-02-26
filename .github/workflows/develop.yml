@@ -47,7 +47,7 @@ jobs:
       # Build the Docker image
       - name: Build Docker Image
         run: |
-          docker build -t sanspeen0930/house-inventory:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/house-inventory:latest .
 
       # Push the image to DockerHub
       - name: Push Docker Image to DockerHub
