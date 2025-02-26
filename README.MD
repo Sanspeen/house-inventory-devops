@@ -67,7 +67,7 @@ After successfully running the application, follow these steps:
 
 1. First you need to run the following command:
    ```shell
-      docker build -t inventory-app .
+      docker build -t inventory-house .
    ```
 2. Then run the docker image filling the empty env variables in the
    empty spaces.
