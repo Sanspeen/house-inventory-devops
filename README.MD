@@ -62,4 +62,22 @@ After successfully running the application, follow these steps:
    ```sh
    http://localhost:8080
    ```
+
+## Create Docker container.
+
+1. First you need to run the following command:
+   ```shell
+      docker build -t inventory-app .
+   ```
+2. Then run the docker image filling the empty env variables in the
+   empty spaces.
+   ```shell
+    docker run -p 8080:8080 \
+    -e SPRING_PROFILES_ACTIVE=${ENVIRONMENT} \
+    -e DB_HOST=${DB_HOST} \
+    -e DB_USER=${DB_USER} \
+    -e DB_PASS=${DB_PASS} \
+    inventory-ms
+   ```
+   
    
