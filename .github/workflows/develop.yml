@@ -52,4 +52,4 @@ jobs:
       # Push the image to DockerHub
       - name: Push Docker Image to DockerHub
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/house-inventory:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/inventory-house:latest
