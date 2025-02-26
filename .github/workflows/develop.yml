@@ -25,6 +25,10 @@ jobs:
       - name: Set up Gradle Cache
         uses: gradle/gradle-build-action@v2
 
+      #Giving access to execute gradlew commands
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
       # Run tests first before build to optimize the process with early failurei
       - name: Run Tests
         run: ./gradlew test
