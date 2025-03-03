@@ -16,8 +16,6 @@ public class ApplianceController {
     @Autowired
     private ApplianceService applianceService;
 
-
-
     @PostMapping("/create")
     public ResponseEntity<Appliance> createAppliance(@RequestBody Appliance newAppliance){
         Appliance savedAppliance = applianceService.saveAppliance(newAppliance);
@@ -27,5 +25,10 @@ public class ApplianceController {
     @GetMapping("/get-all")
     public ResponseEntity<List<Appliance>> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(applianceService.getAll());
+    }
+
+    @GetMapping("/health-check")
+    public String getHealth(){
+        return "Hello world";
     }
 }

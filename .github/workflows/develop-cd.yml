@@ -1,0 +1,17 @@
+name: Deploy to Railway (Production)
+
+on:
+  workflow_run:
+    workflows: ["Build & Deploy"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Desplegar en Railway
+        run: |
+          curl -X POST "https://api.railway.app/v1/services/YOUR_SERVICE_ID/deploy" \
+          -H "Authorization: Bearer ${{ secrets.RAILWAY_DEPLOY_TOKEN }}"
