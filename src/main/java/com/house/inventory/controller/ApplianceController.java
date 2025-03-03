@@ -26,4 +26,9 @@ public class ApplianceController {
     public ResponseEntity<List<Appliance>> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(applianceService.getAll());
     }
+
+    @GetMapping("/health-check")
+    public String getHealth(){
+        return "Hello world";
+    }
 }
