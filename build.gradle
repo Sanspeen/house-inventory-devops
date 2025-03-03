@@ -9,15 +9,7 @@ jacoco {
 	toolVersion = "0.8.10" // Usa la última versión disponible
 }
 
-tasks.jacocoTestReport {
-	dependsOn test // Asegura que se ejecute después de los tests
 
-	reports {
-		xml.required.set(true)
-		csv.required.set(false)
-		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
-	}
-}
 
 group = 'com.house'
 version = '0.0.1-SNAPSHOT'
@@ -46,6 +38,28 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
-	finalizedBy jacocoTestReport
+	finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+	dependsOn test // Asegura que se ejecute después de los tests
+
+	reports {
+		xml.required.set(true)
+		csv.required.set(false)
+		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+	}
+	finalizedBy(tasks.jacocoTestCoverageVerification)
+}
+
+tasks.jacocoTestCoverageVerification {
+	dependsOn jacocoTestReport
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.65 // 80% de cobertura mínima
+			}
+		}
+	}
 }
 
