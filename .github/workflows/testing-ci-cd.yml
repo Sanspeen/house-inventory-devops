@@ -6,7 +6,7 @@ on:
       - develop  # Runs only when changes are merged into 'develop'
 
 jobs:
-  build&deploy-on-testing:
+  build-deploy-on-testing:
     runs-on: ubuntu-latest
 
     steps:

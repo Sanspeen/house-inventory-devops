@@ -6,7 +6,7 @@ on:
       - master  # Runs only when changes are merged into 'develop'
 
 jobs:
-  build&deploy-on-production:
+  build-deploy-on-production:
     runs-on: ubuntu-latest
 
     steps:
