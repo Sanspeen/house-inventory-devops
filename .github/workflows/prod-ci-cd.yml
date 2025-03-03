@@ -59,7 +59,7 @@ jobs:
           
               print(f"Coverage: {percentage}%")
           
-              if percentage < 80:
+              if percentage < 85:
                   print("❌ Coverage is below 60%! Failing the pipeline.")
                   sys.exit(1)
           
