@@ -1,8 +1,15 @@
 plugins {
 	id 'java'
+	id 'jacoco'
 	id 'org.springframework.boot' version '3.4.3'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
+
+jacoco {
+	toolVersion = "0.8.10" // Usa la última versión disponible
+}
+
+
 
 group = 'com.house'
 version = '0.0.1-SNAPSHOT'
@@ -31,4 +38,28 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
 }
+
+tasks.named('jacocoTestReport') {
+	dependsOn test // Asegura que se ejecute después de los tests
+
+	reports {
+		xml.required.set(true)
+		csv.required.set(false)
+		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+	}
+	finalizedBy(tasks.jacocoTestCoverageVerification)
+}
+
+tasks.named('jacocoTestCoverageVerification') {
+	dependsOn jacocoTestReport
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.60
+			}
+		}
+	}
+}
+
