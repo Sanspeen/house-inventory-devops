@@ -14,4 +14,9 @@ class InventoryApplicationTests {
     @Test
     void contextLoads() {
     }
+
+    @Test
+    void mainMethodTest() {
+        InventoryApplication.main(new String[] {}); // Ejecuta el main
+    }
 }

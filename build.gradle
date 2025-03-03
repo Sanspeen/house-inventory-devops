@@ -51,14 +51,7 @@ tasks.named('jacocoTestReport') {
 		csv.required.set(false)
 		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
 	}
-	classDirectories.setFrom(
-			files(classDirectories.files.collect {
-				fileTree(dir: it, exclude: [
-						"com/house/inventory/model/**", // Excluir todo el paquete 'model'
-						"com/house/inventoryn/InventoryApplication.*" // Excluir la clase principal
-				])
-			})
-	)
+
 	finalizedBy(tasks.jacocoTestCoverageVerification)
 }
 
