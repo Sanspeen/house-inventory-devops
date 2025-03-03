@@ -25,13 +25,25 @@ jobs:
       - name: Set up Gradle Cache
         uses: gradle/gradle-build-action@v2
 
-      #Giving access to execute gradlew commands
+      # Giving access to execute gradlew commands
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      # Run tests first before build to optimize the process with early failure
-      - name: Run Tests
-        run: ./gradlew test
+      # Run Tests with JaCoCo coverage
+      - name: Run Tests with Coverage
+        run: ./gradlew test jacocoTestReport jacocoTestCoverageVerification
+
+      # Verify Coverage
+      - name: Check Coverage Threshold
+        run: |
+          COVERAGE=$(grep -oP '(?<=<counter type="INSTRUCTION" missed=")[0-9]+' build/reports/jacoco/test/jacocoTestReport.xml | awk '{missed += $1} END {print missed}')
+          TOTAL=$(grep -oP '(?<=<counter type="INSTRUCTION" covered=")[0-9]+' build/reports/jacoco/test/jacocoTestReport.xml | awk '{covered += $1} END {print covered}')
+          PERCENTAGE=$(echo "scale=2; $TOTAL / ($TOTAL + $COVERAGE) * 100" | bc)
+          echo "Coverage: $PERCENTAGE%"
+          if (( $(echo "$PERCENTAGE < 60" | bc -l) )); then
+            echo "❌ Coverage is below 60%! Failing the pipeline."
+            exit 1
+          fi
 
       # Build the JAR file
       - name: Build JAR with Gradle

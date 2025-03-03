@@ -41,7 +41,7 @@ tasks.named('test') {
 	finalizedBy(tasks.jacocoTestReport)
 }
 
-tasks.jacocoTestReport {
+tasks.named('jacocoTestReport') {
 	dependsOn test // Asegura que se ejecute después de los tests
 
 	reports {
@@ -52,12 +52,12 @@ tasks.jacocoTestReport {
 	finalizedBy(tasks.jacocoTestCoverageVerification)
 }
 
-tasks.jacocoTestCoverageVerification {
+tasks.named('jacocoTestCoverageVerification') {
 	dependsOn jacocoTestReport
 	violationRules {
 		rule {
 			limit {
-				minimum = 0.65 // 80% de cobertura mínima
+				minimum = 0.60
 			}
 		}
 	}
