@@ -16,8 +16,6 @@ public class ApplianceController {
     @Autowired
     private ApplianceService applianceService;
 
-
-
     @PostMapping("/create")
     public ResponseEntity<Appliance> createAppliance(@RequestBody Appliance newAppliance){
         Appliance savedAppliance = applianceService.saveAppliance(newAppliance);
