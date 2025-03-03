@@ -1,7 +1,7 @@
 # 🚀 Get Started
 
 ## 📌 Prerequisites
-Before starting, make sure you have:
+Before starting, make sure you have.:
 - **Git** installed on your system.
 - **Gradle** installed (or use the Gradle wrapper).
 - **PostgreSQL** or a **Neon database** set up.
