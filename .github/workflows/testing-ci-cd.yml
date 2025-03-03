@@ -1,4 +1,4 @@
-name: Build & Deploy on Production
+name: Build & Deploy on Testing
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - develop  # Runs only when changes are merged into 'develop'
 
 jobs:
-  build-and-push:
+  build&deploy-on-testing:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,14 +36,40 @@ jobs:
       # Verify Coverage
       - name: Check Coverage Threshold
         run: |
-          COVERAGE=$(grep -oP '(?<=<counter type="INSTRUCTION" missed=")[0-9]+' build/reports/jacoco/test/jacocoTestReport.xml | awk '{missed += $1} END {print missed}')
-          TOTAL=$(grep -oP '(?<=<counter type="INSTRUCTION" covered=")[0-9]+' build/reports/jacoco/test/jacocoTestReport.xml | awk '{covered += $1} END {print covered}')
-          PERCENTAGE=$(echo "scale=2; $TOTAL / ($TOTAL + $COVERAGE) * 100" | bc)
-          echo "Coverage: $PERCENTAGE%"
-          if (( $(echo "$PERCENTAGE < 60" | bc -l) )); then
-            echo "❌ Coverage is below 60%! Failing the pipeline."
-            exit 1
-          fi
+          python3 <<EOF
+          import xml.etree.ElementTree as ET
+          import sys
+    
+          REPORT_PATH = "build/reports/jacoco/test/jacocoTestReport.xml"
+    
+          try:
+              tree = ET.parse(REPORT_PATH)
+              root = tree.getroot()
+    
+              missed = sum(int(counter.get("missed")) for counter in root.findall(".//counter[@type='INSTRUCTION']"))
+              covered = sum(int(counter.get("covered")) for counter in root.findall(".//counter[@type='INSTRUCTION']"))
+    
+              total = missed + covered
+    
+              if total == 0:
+                  print("❌ No instructions found in coverage report! Failing the pipeline.")
+                  sys.exit(1)
+    
+              percentage = round((covered / total) * 100, 2)
+    
+              print(f"Coverage: {percentage}%")
+    
+              if percentage < 60:
+                  print("❌ Coverage is below 60%! Failing the pipeline.")
+                  sys.exit(1)
+    
+          except FileNotFoundError:
+              print("❌ Coverage report not found! Failing the pipeline.")
+              sys.exit(1)
+          except Exception as e:
+              print(f"❌ Error processing coverage report: {e}")
+              sys.exit(1)
+          EOF
 
       # Build the JAR file
       - name: Build JAR with Gradle

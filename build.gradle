@@ -51,7 +51,6 @@ tasks.named('jacocoTestReport') {
 		csv.required.set(false)
 		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
 	}
-
 	finalizedBy(tasks.jacocoTestCoverageVerification)
 }
 

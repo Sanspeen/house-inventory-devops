@@ -1,4 +1,4 @@
-name: Build & Deploy on Develop
+name: Build & Deploy on Production
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - master  # Runs only when changes are merged into 'develop'
 
 jobs:
-  build-and-push:
+  build&deploy-on-production:
     runs-on: ubuntu-latest
 
     steps:
