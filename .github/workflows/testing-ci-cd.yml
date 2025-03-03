@@ -1,12 +1,12 @@
-name: Build & Deploy on Production
+name: Build & Deploy on Testing
 
 on:
   push:
     branches:
-      - master  # Runs only when changes are merged into 'develop'
+      - develop  # Runs only when changes are merged into 'develop'
 
 jobs:
-  build-deploy-on-production:
+  build-deploy-on-testing:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,7 @@ jobs:
       - name: Set up Gradle Cache
         uses: gradle/gradle-build-action@v2
 
-      #Giving access to execute gradlew commands
+      # Giving access to execute gradlew commands
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
@@ -39,30 +39,30 @@ jobs:
           python3 <<EOF
           import xml.etree.ElementTree as ET
           import sys
-          
+    
           REPORT_PATH = "build/reports/jacoco/test/jacocoTestReport.xml"
-          
+    
           try:
               tree = ET.parse(REPORT_PATH)
               root = tree.getroot()
-          
+    
               missed = sum(int(counter.get("missed")) for counter in root.findall(".//counter[@type='INSTRUCTION']"))
               covered = sum(int(counter.get("covered")) for counter in root.findall(".//counter[@type='INSTRUCTION']"))
-          
+    
               total = missed + covered
-          
+    
               if total == 0:
                   print("❌ No instructions found in coverage report! Failing the pipeline.")
                   sys.exit(1)
-          
+    
               percentage = round((covered / total) * 100, 2)
-          
+    
               print(f"Coverage: {percentage}%")
-          
+    
               if percentage < 60:
                   print("❌ Coverage is below 60%! Failing the pipeline.")
                   sys.exit(1)
-          
+    
           except FileNotFoundError:
               print("❌ Coverage report not found! Failing the pipeline.")
               sys.exit(1)
@@ -70,10 +70,6 @@ jobs:
               print(f"❌ Error processing coverage report: {e}")
               sys.exit(1)
           EOF
-
-      # Run tests first before build to optimize the process with early failure
-      - name: Run Tests
-        run: ./gradlew test
 
       # Build the JAR file
       - name: Build JAR with Gradle

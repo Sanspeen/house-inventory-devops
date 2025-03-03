@@ -1,8 +1,15 @@
 plugins {
 	id 'java'
+	id 'jacoco'
 	id 'org.springframework.boot' version '3.4.3'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
+
+jacoco {
+	toolVersion = "0.8.10" // Usa la última versión disponible
+}
+
+
 
 group = 'com.house'
 version = '0.0.1-SNAPSHOT'
@@ -20,15 +27,41 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'junit:junit:4.13.1'
 	compileOnly 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
+	testImplementation 'com.h2database:h2'
+	implementation 'org.postgresql:postgresql:42.5.0' // O la versión más reciente
 
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
 }
+
+tasks.named('jacocoTestReport') {
+	dependsOn test
+
+	reports {
+		xml.required.set(true)
+		csv.required.set(false)
+		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+	}
+	finalizedBy(tasks.jacocoTestCoverageVerification)
+}
+
+tasks.named('jacocoTestCoverageVerification') {
+	dependsOn jacocoTestReport
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.60
+			}
+		}
+	}
+}
+
