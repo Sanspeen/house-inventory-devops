@@ -60,7 +60,7 @@ jobs:
               print(f"Coverage: {percentage}%")
     
               if percentage < 60:
-                  print("❌ Coverage is below 60%! Failing the pipeline.")
+                  print("❌ Coverage is below 85%! Failing the pipeline.")
                   sys.exit(1)
     
           except FileNotFoundError:
