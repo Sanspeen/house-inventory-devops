@@ -4,16 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 @Entity(name = "furniture")
 public class Furniture {
     @Id
@@ -39,4 +36,36 @@ public class Furniture {
 
     @NonNull
     private Integer length;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setBoughtDate(Date boughtDate) {
+        this.boughtDate = boughtDate;
+    }
+
+    public void setIsNew(Boolean aNew) {
+        isNew = aNew;
+    }
+
+    public void setEnergyConsumption(Double energyConsumption) {
+        this.energyConsumption = energyConsumption;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
+    }
 }

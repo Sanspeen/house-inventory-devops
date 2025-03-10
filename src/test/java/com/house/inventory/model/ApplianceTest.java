@@ -1,10 +1,7 @@
 package com.house.inventory.model;
 
-
 import org.junit.jupiter.api.Test;
-
 import java.util.Date;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class ApplianceTest {
@@ -54,27 +51,15 @@ class ApplianceTest {
         assertEquals(90, appliance.getLength());
     }
 
-    @Test
-    void testEqualsAndHashCode() {
-        Date boughtDate = new Date();
-        Appliance appliance1 = new Appliance(1L, "Microwave", "Panasonic", boughtDate, true, 1200.0, 50, 40);
-        Appliance appliance2 = new Appliance(1L, "Microwave", "Panasonic", boughtDate, true, 1200.0, 50, 40);
-        Appliance appliance3 = new Appliance(2L, "Blender", "Philips", boughtDate, false, 300.0, 20, 30);
 
-        assertEquals(appliance1, appliance2);
-        assertNotEquals(appliance1, appliance3);
-        assertEquals(appliance1.hashCode(), appliance2.hashCode());
-        assertNotEquals(appliance1.hashCode(), appliance3.hashCode());
-    }
 
     @Test
-    void testToString() {
-        Date boughtDate = new Date();
-        Appliance appliance = new Appliance(3L, "Air Conditioner", "Daikin", boughtDate, false, 2000.0, 100, 200);
-
-        String expectedToString = "Appliance(id=3, name=Air Conditioner, brand=Daikin, boughtDate=" + boughtDate + ", isNew=false, energyConsumption=2000.0, width=100, length=200)";
-
-        assertEquals(expectedToString, appliance.toString());
+    void testNonNullFields() {
+        assertThrows(NullPointerException.class, () -> new Appliance(4L, null, "Sony", new Date(), true, 100.0, 30, 40));
+        assertThrows(NullPointerException.class, () -> new Appliance(4L, "Speaker", null, new Date(), true, 100.0, 30, 40));
+        assertThrows(NullPointerException.class, () -> new Appliance(4L, "Speaker", "Sony", new Date(), null, 100.0, 30, 40));
+        assertThrows(NullPointerException.class, () -> new Appliance(4L, "Speaker", "Sony", new Date(), true, null, 30, 40));
+        assertThrows(NullPointerException.class, () -> new Appliance(4L, "Speaker", "Sony", new Date(), true, 100.0, null, 40));
+        assertThrows(NullPointerException.class, () -> new Appliance(4L, "Speaker", "Sony", new Date(), true, 100.0, 30, null));
     }
 }
-

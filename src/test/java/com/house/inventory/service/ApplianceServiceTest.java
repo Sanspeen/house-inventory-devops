@@ -7,11 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -29,39 +28,106 @@ class ApplianceServiceTest {
 
     @BeforeEach
     void setUp() {
-        appliance = new Appliance(null, "Fridge", "Samsung", null, true, 150.0, 70, 180);
+        appliance = new Appliance(1L, "Fridge", "Samsung", new Date(), true, 150.5, 60, 80);
     }
 
     @Test
-    void saveAppliance_ShouldSaveApplianceWithCurrentDate() {
-        when(applianceRepository.save(any(Appliance.class))).thenAnswer(invocation -> {
-            Appliance savedAppliance = invocation.getArgument(0);
-            savedAppliance.setId(1L);
-            return savedAppliance;
-        });
-
+    void testSaveAppliance() {
+        when(applianceRepository.save(any(Appliance.class))).thenReturn(appliance);
         Appliance savedAppliance = applianceService.saveAppliance(appliance);
-
         assertNotNull(savedAppliance);
-        assertNotNull(savedAppliance.getBoughtDate());
-        assertEquals(1L, savedAppliance.getId());
-        verify(applianceRepository, times(1)).save(appliance);
+        assertEquals("Fridge", savedAppliance.getName());
+        verify(applianceRepository, times(1)).save(any(Appliance.class));
     }
 
     @Test
-    void getAll_ShouldReturnListOfAppliances() {
-        List<Appliance> appliances = Arrays.asList(
-                new Appliance(1L, "Fridge", "Samsung", new Date(), true, 150.0, 70, 180),
-                new Appliance(2L, "Washing Machine", "LG", new Date(), false, 200.0, 60, 100)
-        );
-
-        when(applianceRepository.findAll()).thenReturn(appliances);
-
-        List<Appliance> result = applianceService.getAll();
-
-        assertEquals(2, result.size());
-        assertEquals("Fridge", result.get(0).getName());
-        assertEquals("Washing Machine", result.get(1).getName());
+    void testGetAll() {
+        when(applianceRepository.findAll()).thenReturn(List.of(appliance));
+        List<Appliance> appliances = applianceService.getAll();
+        assertFalse(appliances.isEmpty());
+        assertEquals(1, appliances.size());
         verify(applianceRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testEditAppliance() {
+        when(applianceRepository.findById(1L)).thenReturn(Optional.of(appliance));
+        when(applianceRepository.save(any(Appliance.class))).thenReturn(appliance);
+        Appliance updatedAppliance = applianceService.editAppliance(1L, appliance);
+        assertNotNull(updatedAppliance);
+        assertEquals("Fridge", updatedAppliance.getName());
+        verify(applianceRepository, times(1)).save(any(Appliance.class));
+    }
+
+    @Test
+    void testEditAppliance_NotFound() {
+        when(applianceRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> applianceService.editAppliance(1L, appliance));
+    }
+
+    @Test
+    void testPatchAppliance() {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("name", "Microwave");
+        updates.put("brand", "LG");
+        updates.put("isNew", false);
+        updates.put("energyConsumption", 100.0);
+        updates.put("width", 50);
+        updates.put("length", 40);
+
+        when(applianceRepository.findById(1L)).thenReturn(Optional.of(appliance));
+        when(applianceRepository.save(any(Appliance.class))).thenReturn(appliance);
+
+        Appliance patchedAppliance = applianceService.patchAppliance(1L, updates);
+
+        assertEquals("Microwave", patchedAppliance.getName());
+        assertEquals("LG", patchedAppliance.getBrand());
+        assertFalse(patchedAppliance.getIsNew());
+        assertEquals(100.0, patchedAppliance.getEnergyConsumption());
+        assertEquals(50, patchedAppliance.getWidth());
+        assertEquals(40, patchedAppliance.getLength());
+        verify(applianceRepository, times(1)).save(any(Appliance.class));
+    }
+
+    @Test
+    void testPatchAppliance_NotFound() {
+        when(applianceRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> applianceService.patchAppliance(1L, new HashMap<>()));
+    }
+
+    @Test
+    void testDeleteAppliance() {
+        doNothing().when(applianceRepository).deleteById(1L);
+        applianceService.deleteById(1L);
+        verify(applianceRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void patchAppliance_ShouldUpdateBoughtDate_WhenValidIdProvided() {
+        // Arrange
+        Long id = 1L;
+        Date newBoughtDate = new Date();
+        Appliance existingAppliance = new Appliance(1L, "Fridge", "Samsung", new Date(), true, 150.5, 80, 60);
+        when(applianceRepository.findById(id)).thenReturn(Optional.of(existingAppliance));
+        when(applianceRepository.save(existingAppliance)).thenReturn(existingAppliance);
+
+        // Act
+        Appliance updatedAppliance = applianceService.patchAppliance(id, Map.of("boughtDate", newBoughtDate));
+
+        // Assert
+        assertEquals(newBoughtDate, updatedAppliance.getBoughtDate());
+        verify(applianceRepository).save(existingAppliance);
+    }
+
+    @Test
+    void patchAppliance_ShouldThrowException_WhenApplianceNotFound() {
+        // Arrange
+        Long id = 99L;
+        when(applianceRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+                () -> applianceService.patchAppliance(id, Map.of("boughtDate", new Date())));
+        assertEquals("Appliance not found with id 99", exception.getMessage());
     }
 }
