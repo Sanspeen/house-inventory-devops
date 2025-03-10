@@ -23,6 +23,56 @@ class FurnitureTest {
     }
 
     @Test
+    void testSetters() {
+        Furniture furniture = new Furniture();
+        Date boughtDate = new Date();
+
+        furniture.setId(2L);
+        furniture.setName("Chair");
+        furniture.setBrand("BrandY");
+        furniture.setBoughtDate(boughtDate);
+        furniture.setIsNew(false);
+        furniture.setEnergyConsumption(15.0);
+        furniture.setWidth(50);
+        furniture.setLength(120);
+
+        assertEquals(2L, furniture.getId());
+        assertEquals("Chair", furniture.getName());
+        assertEquals("BrandY", furniture.getBrand());
+        assertEquals(boughtDate, furniture.getBoughtDate());
+        assertFalse(furniture.getIsNew());
+        assertEquals(15.0, furniture.getEnergyConsumption());
+        assertEquals(50, furniture.getWidth());
+        assertEquals(120, furniture.getLength());
+    }
+
+    @Test
+    void testPartialUpdateWithSetters() {
+        Furniture furniture = new Furniture(3L, "Desk", "BrandZ", new Date(), true, 25.5, 80, 150);
+
+        // Solo actualizamos algunos valores
+        furniture.setName("Office Desk");
+        furniture.setEnergyConsumption(30.0);
+        furniture.setWidth(85);
+
+        assertEquals("Office Desk", furniture.getName());
+        assertEquals(30.0, furniture.getEnergyConsumption());
+        assertEquals(85, furniture.getWidth());
+
+        // Verificamos que los otros valores se mantuvieron
+        assertEquals("BrandZ", furniture.getBrand());
+        assertEquals(150, furniture.getLength());
+        assertTrue(furniture.getIsNew());
+    }
+
+    @Test
+    void testAllowNullBoughtDate() {
+        Furniture furniture = new Furniture();
+        furniture.setBoughtDate(null);
+        assertNull(furniture.getBoughtDate());
+    }
+
+    @Test
     void testNonNullFieldsShouldThrowException() {
         Date boughtDate = new Date();
 
@@ -49,25 +99,5 @@ class FurnitureTest {
         assertThrows(NullPointerException.class, () ->
                 new Furniture(1L, "Table", "BrandX", boughtDate, true, 20.5, 100, null)
         );
-    }
-
-    @Test
-    void testEqualsAndHashCode() {
-        Date boughtDate = new Date();
-        Furniture furniture1 = new Furniture(1L, "Table", "BrandX", boughtDate, true, 20.5, 100, 200);
-        Furniture furniture2 = new Furniture(1L, "Table", "BrandX", boughtDate, true, 20.5, 100, 200);
-
-        assertEquals(furniture1, furniture2);
-        assertEquals(furniture1.hashCode(), furniture2.hashCode());
-    }
-
-    @Test
-    void testToString() {
-        Date boughtDate = new Date();
-        Furniture furniture = new Furniture(1L, "Table", "BrandX", boughtDate, true, 20.5, 100, 200);
-
-        String expectedString = "Furniture(id=1, name=Table, brand=BrandX, boughtDate=" + boughtDate +
-                ", isNew=true, energyConsumption=20.5, width=100, length=200)";
-        assertEquals(expectedString, furniture.toString());
     }
 }

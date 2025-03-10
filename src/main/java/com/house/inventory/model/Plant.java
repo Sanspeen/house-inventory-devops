@@ -5,8 +5,6 @@ import lombok.*;
 
 import java.util.Date;
 
-@Data
-@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,4 +27,28 @@ public class Plant {
 
     @NonNull
     private Integer currentAge; // Value in days.
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBoughtDate(Date boughtDate) {
+        this.boughtDate = boughtDate;
+    }
+
+    public void setEstimatedLifeExpectancy(Integer estimatedLifeExpectancy) {
+        this.estimatedLifeExpectancy = estimatedLifeExpectancy;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
+
+    public void setCurrentAge(Integer currentAge) {
+        this.currentAge = currentAge;
+    }
 }
