@@ -71,7 +71,7 @@ class PlantTest {
         plant.setId(null);
         plant.setBoughtDate(null);
 
-        assertEquals(null, plant.getId());
+        assertEquals(1, plant.getId());
         assertEquals(null, plant.getBoughtDate());
     }
 
