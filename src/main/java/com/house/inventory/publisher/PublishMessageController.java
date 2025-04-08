@@ -1,4 +1,4 @@
-package com.house.inventory.controller;
+package com.house.inventory.publisher;
 
 import com.house.inventory.model.MessageRequest;
 import com.house.inventory.service.AzureServiceBusSender;
@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/messages")
-public class MessageController {
+@RequestMapping("/api/v2/messages")
+public class PublishMessageController {
 
     private final AzureServiceBusSender sender;
 
-    public MessageController(AzureServiceBusSender sender) {
+    public PublishMessageController(AzureServiceBusSender sender) {
         this.sender = sender;
     }
 
     @PostMapping
     public ResponseEntity<String> postMessage(@RequestBody MessageRequest request) {
-        sender.sendMessage(request.getContent());
+        sender.sendMessage(request.getMessage());
         return ResponseEntity.ok("Message sent");
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/v2/appliance")
+@RequestMapping("/api/v2/appliance")
 public class ApplianceController {
 
     @Autowired

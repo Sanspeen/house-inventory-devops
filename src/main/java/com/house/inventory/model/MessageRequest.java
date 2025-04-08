@@ -1,14 +1,11 @@
 package com.house.inventory.model;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class MessageRequest {
-    private String content;
-
-    // Getters and Setters
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
+    private String message;
 }
