@@ -12,3 +12,8 @@ spring:
     hibernate:
       ddl-auto: update  # Change to 'validate' or 'none' in production
     show-sql: true  # Logs SQL queries (optional)
+
+azure:
+  servicebus:
+    connection-string: ${QUEUE_CONNECTION_STRING}
+    queue-name: ${QUEUE_NAME}
