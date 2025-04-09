@@ -10,11 +10,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
+
 @Service
 public class ApplianceService {
 
     @Autowired
     private ApplianceRepository applianceRepository;
+
+    public Appliance generateGenericAppliance(){
+        return Appliance.builder()
+                .isNew(true)
+                .name("Generic")
+                .width(23)
+                .brand("Generic")
+                .boughtDate(new Date())
+                .energyConsumption(123.0)
+                .length(12)
+                .build();
+    }
 
     public Appliance saveAppliance(Appliance newAppliance){
         newAppliance.setBoughtDate(new Date());

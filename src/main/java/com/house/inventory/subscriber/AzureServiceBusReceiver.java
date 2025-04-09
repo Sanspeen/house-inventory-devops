@@ -3,6 +3,7 @@ package com.house.inventory.subscriber;
 import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusProcessorClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.house.inventory.model.Appliance;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -38,12 +39,19 @@ public class AzureServiceBusReceiver {
                     String json = context.getMessage().getBody().toString();
                     String source = (String) context.getMessage().getApplicationProperties().get("source");
                     String destination = (String) context.getMessage().getApplicationProperties().get("destination");
-
                     System.out.printf("Message received in %s from %s to %s: %s%n", subscriptionName, source, destination, json);
 
                     try {
                         Map<String, Object> messageMap = objectMapper.readValue(json, Map.class);
                         System.out.println("PROCESSED JSON: " + messageMap);
+                        String msToSend = String.valueOf(messageMap.get("sendTo"));
+                        switch (msToSend){
+                            case "microservice1" -> System.out.println("REDIRECTED TO MS1");
+                            case "microservice2" -> System.out.println("REDIRECTED TO MS2");
+                            case "microservice3" -> System.out.println("REDIRECTED TO MS3");
+                            case "coordinator" -> System.out.println("REDIRECTED TO COORDINATOR");
+                            default -> System.out.println("IDK THIS MS");
+                        }
                     } catch (Exception e) {
                         System.err.println("Failed to parse JSON message: " + e.getMessage());
                     }
