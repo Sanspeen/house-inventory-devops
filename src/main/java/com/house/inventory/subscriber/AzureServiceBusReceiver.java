@@ -15,8 +15,11 @@ public class AzureServiceBusReceiver {
     @Value("${azure.servicebus.connection-string}")
     private String connectionString;
 
-    @Value("${azure.servicebus.queue-name}")
-    private String queueName;
+    @Value("${azure.servicebus.topic-name}")
+    private String topicName;
+
+    @Value("${azure.servicebus.subscription-name}")
+    private String subscriptionName;
 
     private final ObjectMapper objectMapper;
 
@@ -29,27 +32,54 @@ public class AzureServiceBusReceiver {
         ServiceBusProcessorClient processorClient = new ServiceBusClientBuilder()
                 .connectionString(connectionString)
                 .processor()
-                .queueName(queueName)
+                .topicName(topicName)
+                .subscriptionName(subscriptionName)
                 .processMessage(context -> {
                     String json = context.getMessage().getBody().toString();
-                    System.out.println("Raw message: " + json);
+                    String source = (String) context.getMessage().getApplicationProperties().get("source");
+                    String destination = (String) context.getMessage().getApplicationProperties().get("destination");
+
+                    System.out.printf("Message received in %s from %s to %s: %s%n", subscriptionName, source, destination, json);
 
                     try {
-                        // Dynamically parse JSON into Map
                         Map<String, Object> messageMap = objectMapper.readValue(json, Map.class);
-
-                        System.out.println("PROCESSED JSON" + messageMap);
-
+                        System.out.println("PROCESSED JSON: " + messageMap);
                     } catch (Exception e) {
                         System.err.println("Failed to parse JSON message: " + e.getMessage());
                     }
-
                 })
                 .processError(context -> {
                     System.err.println("Error in message processing: " + context.getException());
                 })
                 .buildProcessorClient();
+        processorClient.start();
+    }
 
+    @PostConstruct
+    public void startReceiverMS1() {
+        ServiceBusProcessorClient processorClient = new ServiceBusClientBuilder()
+                .connectionString(connectionString)
+                .processor()
+                .topicName(topicName)
+                .subscriptionName(subscriptionName)
+                .processMessage(context -> {
+                    String json = context.getMessage().getBody().toString();
+                    String source = (String) context.getMessage().getApplicationProperties().get("source");
+                    String destination = (String) context.getMessage().getApplicationProperties().get("destination");
+
+                    System.out.printf("Message received in %s from %s to %s: %s%n", subscriptionName, source, destination, json);
+
+                    try {
+                        Map<String, Object> messageMap = objectMapper.readValue(json, Map.class);
+                        System.out.println("PROCESSED JSON: " + messageMap);
+                    } catch (Exception e) {
+                        System.err.println("Failed to parse JSON message: " + e.getMessage());
+                    }
+                })
+                .processError(context -> {
+                    System.err.println("Error in message processing: " + context.getException());
+                })
+                .buildProcessorClient();
         processorClient.start();
     }
 }

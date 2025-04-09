@@ -11,18 +11,27 @@ public class AzureServiceBusSender {
 
     @Value("${azure.servicebus.connection-string}")
     private String connectionString;
-    @Value("${azure.servicebus.queue-name}")
-    private String queueName;
 
-    public void sendMessage(String jsonString) {
+    @Value("${azure.servicebus.topic-name}")
+    private String topicName;
+
+    public void sendMessage(String messageBody, String source, String destination) {
         ServiceBusSenderClient senderClient = new ServiceBusClientBuilder()
                 .connectionString(connectionString)
                 .sender()
-                .queueName(queueName)
+                .topicName(topicName)
                 .buildClient();
 
-        senderClient.sendMessage(new ServiceBusMessage(jsonString));
-        System.out.println("Sent raw JSON message: " + jsonString);
+        ServiceBusMessage message = new ServiceBusMessage(messageBody);
+        message.setSessionId(destination); // Important for ordered delivery
+        message.getApplicationProperties().put("source", source);
+        message.getApplicationProperties().put("destination", destination);
+
+        senderClient.sendMessage(message);
+        System.out.println("Sent ordered message from " + source + " to " + destination + ": " + messageBody);
+
         senderClient.close();
     }
 }
+
+

@@ -17,3 +17,5 @@ azure:
   servicebus:
     connection-string: ${QUEUE_CONNECTION_STRING}
     queue-name: ${QUEUE_NAME}
+    topic-name: ${TOPIC_NAME}
+    subscription-name: ${SUBSCRIPTION_NAME}
