@@ -25,6 +25,19 @@ public class FurnitureService {
         return furnitureRepository.findAll();
     }
 
+    public Furniture generateGenericFurniture() {
+        Furniture furniture = new Furniture();
+        furniture.setIsNew(true);
+        furniture.setName("Generic Furniture");
+        furniture.setWidth(40);
+        furniture.setBrand("Generic");
+        furniture.setBoughtDate(new Date());
+        furniture.setEnergyConsumption(50.0);
+        furniture.setLength(30);
+        return furniture;
+    }
+
+
     public Furniture editFurniture(Long id, Furniture furniture){
         return furnitureRepository.findById(id).map(existingFurniture -> {
             existingFurniture.setName(furniture.getName());

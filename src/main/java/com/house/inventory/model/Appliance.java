@@ -11,6 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 @Entity(name = "appliance")
 public class Appliance {
     @Id

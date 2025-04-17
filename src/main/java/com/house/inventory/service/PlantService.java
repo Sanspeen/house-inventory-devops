@@ -16,6 +16,16 @@ public class PlantService {
     @Autowired
     PlantRepository plantRepository;
 
+    public Plant generateGenericPlant() {
+        Plant plant = new Plant();
+        plant.setName("Generic Plant");
+        plant.setBoughtDate(new Date());
+        plant.setEstimatedLifeExpectancy(365);
+        plant.setEnvironment("Indoor");
+        plant.setCurrentAge(30);
+        return plant;
+    }
+
     public Plant create(Plant plant){
         return plantRepository.save(plant);
     }

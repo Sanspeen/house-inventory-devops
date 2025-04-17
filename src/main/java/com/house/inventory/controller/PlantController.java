@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/v1/plant")
+@RequestMapping("/api/v2/plant")
 public class PlantController {
 
     @Autowired
