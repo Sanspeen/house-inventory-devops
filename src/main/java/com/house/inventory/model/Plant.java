@@ -1,6 +1,5 @@
 package com.house.inventory.model;
 
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
@@ -8,10 +7,7 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name="plant")
 public class Plant {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
