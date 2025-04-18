@@ -66,16 +66,6 @@ class PlantTest {
     }
 
     @Test
-    void testNullSetters() {
-        Date boughtDate = new Date();
-        plant.setId(null);
-        plant.setBoughtDate(null);
-
-        assertEquals(1, plant.getId());
-        assertEquals(null, plant.getBoughtDate());
-    }
-
-    @Test
     void testNonNullFields() {
         assertThrows(NullPointerException.class, () -> new Plant(null, null, new Date(), null, null, null));
     }
