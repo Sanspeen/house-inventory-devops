@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v2/messages")
 public class PublishMessageController {
-
-    @Autowired
     private final AzureServiceBusSender sender;
 
     public PublishMessageController(AzureServiceBusSender sender) {
