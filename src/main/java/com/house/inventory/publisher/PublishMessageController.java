@@ -2,7 +2,6 @@ package com.house.inventory.publisher;
 
 import com.house.inventory.model.MessageRequest;
 import com.house.inventory.service.AzureServiceBusSender;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
